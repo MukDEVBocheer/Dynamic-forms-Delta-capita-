@@ -1,0 +1,47 @@
+
+<div class="container py-4" style="max-width: 700px;">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">{{ formName }}</h3>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div *ngFor="let field of formConfig">
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ field.label }} <span *ngIf="field.required" class="text-danger">*</span></label>
+            <ng-container [ngSwitch]="field.type">
+              <input *ngSwitchCase="'text'" class="form-control" [formControlName]="field.label" [attr.placeholder]="field.helpText" />
+              <textarea *ngSwitchCase="'textarea'" class="form-control" [formControlName]="field.label" [attr.placeholder]="field.helpText"></textarea>
+              <select *ngSwitchCase="'dropdown'" class="form-select" [formControlName]="field.label">
+                <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+              </select>
+              <div *ngSwitchCase="'checkbox'">
+                <div class="form-check" *ngFor="let opt of getCheckboxOptions(field); let i = index">
+                  <input type="checkbox" class="form-check-input" [formControl]="asFormControl(getCheckboxArray(field).controls[i])" [id]="'chk-' + field.label + '-' + i" />
+                  <label class="form-check-label ms-1" [for]="'chk-' + field.label + '-' + i">{{ opt }}</label>
+                </div>
+              </div>
+              <input *ngSwitchCase="'date'" type="date" class="form-control" [formControlName]="field.label" />
+              <div *ngSwitchCase="'radio'">
+                <div class="form-check form-check-inline" *ngFor="let opt of field.options">
+                  <input type="radio" class="form-check-input" [formControlName]="field.label" [value]="opt" [id]="'radio-' + field.label + '-' + opt" />
+                  <label class="form-check-label ms-1" [for]="'radio-' + field.label + '-' + opt">{{ opt }}</label>
+                </div>
+              </div>
+            </ng-container>
+            <div class="form-text">{{ field.helpText }}</div>
+            <div *ngIf="form.get(field.label)?.invalid && (form.get(field.label)?.dirty || form.get(field.label)?.touched)" class="text-danger small mt-1">
+              Field is required or invalid.
+            </div>
+          </div>
+        </div>
+  <button class="btn btn-success w-100" type="submit"><i class="fas fa-paper-plane me-1"></i> Submit</button>
+      </form>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+  <div *ngIf="submittedData" class="alert alert-success mt-3">
+    <h4>Submitted Data</h4>
+    <pre class="bg-white border p-2 rounded">{{ submittedData | json }}</pre>
+  </div>
+</div>

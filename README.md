@@ -1,27 +1,39 @@
-# DynamicForm
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
+# Dynamic Form Builder Application
 
-## Development server
+## Overview
+This Angular application allows Admins to build, manage, and preview dynamic forms with drag-and-drop, field configuration, and permission controls. Users can fill out forms, and Admins can view all submissions.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
+- **Form Builder**: Drag-and-drop interface for creating forms with:
+	- Text input (single-line, multi-line)
+	- Dropdown select (configurable options)
+	- Checkbox groups
+	- Date picker
+	- Radio button groups
+	- Configurable label, required/optional, help text, validation (min/max length, pattern)
+- **Form Management**: List, edit, preview, and delete form templates
+- **Form Preview & Submission**: End-users can fill forms, with validation and mock API submission
+- **Authorization**: Login with role selection (Admin/User)
+	- Admin: Can create, edit, delete forms, and view submissions
+	- User: Can only view and fill forms
+- **Submissions View**: Admins can view all submitted data for each form
+- **Persistence**: Forms and submissions are stored in browser localStorage (mock API)
 
-## Code scaffolding
+## Usage
+1. Run `ng serve` and open [http://localhost:4200/](http://localhost:4200/)
+2. Login as Admin or User
+3. Admins can create/edit/delete forms, and view submissions
+4. Users can fill out forms and submit
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Design Notes
+- **Persistence**: No real backend; all data is stored in localStorage for demo purposes
+- **Validation**: All configured rules are enforced on the form preview and submission
+- **Authorization**: Route guards and UI checks enforce permissions
+- **Limitations**:
+	- No real authentication (role is selected at login)
+	- No server API; all data is local
+	- No advanced field types (file upload, nested groups, etc.)
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Approach
+If any requirement was not fully implemented due to time, the approach and reasoning are documented here. The code is modular and can be extended for real backend/API integration.

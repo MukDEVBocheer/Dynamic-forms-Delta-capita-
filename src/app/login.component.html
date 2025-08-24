@@ -1,0 +1,22 @@
+
+<div class="d-flex align-items-center justify-content-center vh-100 bg-light">
+  <div class="card shadow-sm p-4" style="min-width: 350px; max-width: 400px;">
+    <div class="card-body">
+      <h2 class="mb-4 text-center fw-bold">Login</h2>
+      <form (ngSubmit)="onLogin()">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input class="form-control" [(ngModel)]="username" name="username" required placeholder="Enter your username" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Role</label>
+          <select class="form-select" [(ngModel)]="role" name="role" required>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+  <button class="btn btn-primary w-100" type="submit"><i class="fas fa-sign-in-alt me-1"></i> Login</button>
+      </form>
+    </div>
+  </div>
+</div>

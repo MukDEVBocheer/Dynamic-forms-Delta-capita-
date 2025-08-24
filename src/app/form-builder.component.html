@@ -1,0 +1,98 @@
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <!-- Sidebar: Field Types -->
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Field Types</h5>
+        </div>
+        <div class="card-body p-2">
+          <div cdkDropList #sidebarDropList="cdkDropList" [cdkDropListData]="availableFields" [cdkDropListConnectedTo]="[canvasDropList]" class="list-group">
+            <div *ngFor="let field of availableFields" cdkDrag [cdkDragData]="field" [cdkDragDisabled]="!isAdmin()" class="list-group-item list-group-item-action mb-2 border rounded text-center bg-light">
+              {{ field.label }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Canvas -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">Form Canvas</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Form Name:</label>
+            <input class="form-control" [(ngModel)]="formName" placeholder="Enter form name" />
+          </div>
+          <ul class="list-group mb-3" cdkDropList #canvasDropList="cdkDropList" [cdkDropListData]="formFields" [cdkDropListConnectedTo]="[sidebarDropList]" (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!isAdmin()">
+            <li *ngIf="formFields.length === 0" class="list-group-item text-center text-muted bg-light border-0">Drag fields here</li>
+            <li *ngFor="let field of formFields; let i = index" cdkDrag class="list-group-item d-flex justify-content-between align-items-center form-field-item mb-2 border border-primary bg-white shadow-sm" [class.active]="selectedFieldIndex === i" (click)="selectField(i)">
+              <span>
+                <strong>{{ field.label }}</strong>
+                <span class="badge bg-secondary ms-2">{{ field.type }}</span>
+              </span>
+              <span class="text-muted small">(Click to configure)</span>
+            </li>
+          </ul>
+          <button class="btn btn-success w-100" (click)="saveForm()" [disabled]="!isAdmin()">
+            <i class="fas fa-save me-1"></i> Save Form
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field Configuration Panel -->
+    <div class="col-md-3 mb-4" *ngIf="selectedFieldIndex !== null">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0">Field Configuration</h5>
+        </div>
+        <div class="card-body bg-light border border-primary rounded">
+          <ng-container *ngIf="formFields[selectedFieldIndex] as field">
+            <div class="mb-3 text-center">
+              <span class="badge bg-primary fs-6 mb-2">Live Preview: <strong>{{ field.label || 'Field Label' }}</strong></span>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold text-primary">Label</label>
+              <input class="form-control border border-primary fw-bold text-dark" [(ngModel)]="field.label" (ngModelChange)="updateField('label', $event)" placeholder="Enter field label" />
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="field.required" (ngModelChange)="updateField('required', $event)" id="requiredCheck" />
+              <label class="form-check-label" for="requiredCheck">Required</label>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Help Text</label>
+              <input class="form-control" [(ngModel)]="field.helpText" (ngModelChange)="updateField('helpText', $event)" />
+            </div>
+            <ng-container *ngIf="field.type === 'text' || field.type === 'textarea'">
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label">Min Length</label>
+                  <input type="number" class="form-control" [ngModel]="field.validation?.minLength" (ngModelChange)="updateValidation('minLength', $event)" />
+                </div>
+                <div class="col">
+                  <label class="form-label">Max Length</label>
+                  <input type="number" class="form-control" [ngModel]="field.validation?.maxLength" (ngModelChange)="updateValidation('maxLength', $event)" />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Pattern</label>
+                <input class="form-control" [ngModel]="field.validation?.pattern" (ngModelChange)="updateValidation('pattern', $event)" />
+              </div>
+            </ng-container>
+            <ng-container *ngIf="field.type === 'dropdown' || field.type === 'checkbox' || field.type === 'radio'">
+              <div class="mb-3">
+                <label class="form-label">Options (comma separated)</label>
+                <input class="form-control" [(ngModel)]="optionsString" />
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
